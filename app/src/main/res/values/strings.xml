@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">2.UserInputProject</string>
+    <string name="itemNum">수량</string>
+    <string name="plus">+</string>
+    <string name="minusButton">-</string>
+    <string name="summary">주문 내역</string>
+    <string name="oreder">주문하기</string>
+    <string name="toppingText">토핑</string>
+    <string name="whippingCreamAdd">휘핑크림 추가 (1$)</string>
+    <string name="chocolateChkAdd">초콜릿 추가 (2$)</string>
+    <string name="writeNameHint">이름을 입력하세요</string>
+</resources>
