@@ -3,57 +3,54 @@ package study.seo.a2userinputproject
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.*
+import study.seo.a2userinputproject.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private var quantity = 0
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-    }
-    private fun displayQuantity(number: Int = 0) {
-        val quantityView = findViewById<TextView>(R.id.quantityNum)
-        quantityView.text = number.toString()
-    }
-    fun increment(view: View) {
-        displayQuantity(++quantity)
-    }
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-    fun decrement(view: View) {
-        if (quantity > 0) {
-            displayQuantity(--quantity)
-        } else {
-            Toast.makeText(this, "수량이 이미 0입니다.", Toast.LENGTH_SHORT).show()
+        binding.plusButton.setOnClickListener {
+            displayQuantity(++quantity)
+        }
+
+        binding.minusButton.setOnClickListener {
+            if (quantity > 0) {
+                displayQuantity(--quantity)
+            } else {
+                Toast.makeText(this, "수량이 이미 0입니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.orderButton.setOnClickListener {
+            val cream = binding.whippingCreamChk.isChecked
+            val choco = binding.chocolateChk.isChecked
+            summaryOrder(calcPrice(cream, choco), cream, choco, binding.writeName.text.toString())
         }
     }
 
-    fun submitOrder(view: View) {
-        val name = writeName()
-        val cream = isCheckCream()
-        val chocolate = isCheckChoco()
-        val price = calcPrice(cream, chocolate)
-        //priceView.text = summaryOrder(price, cream, chocolate, name)
-        summaryOrder(price, cream, chocolate, name)
-    }
-
-    private fun writeName(): String {
-        val name = findViewById<EditText>(R.id.writeName)
-        return name.text.toString()
+    private fun displayQuantity(number: Int = 0) {
+        binding.quantityNum.text = number.toString()
     }
 
     private fun summaryOrder(
         price: String,
-        whippingCream: String,
-        chocolate: String,
+        whippingCream: Boolean,      //Boolean값으로 바꾸고 간단히 쓸수 있을듯
+        chocolate: Boolean,
         name: String
     ) {
         if (name.isBlank()) {
             Toast.makeText(this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show()
         }
+
         val finalOrder = """Name : $name
-            |CreamAdd? : $whippingCream
-            |ChocoAdd? : $chocolate
+            |CreamAdd? : ${whippingCream.toOrder()}
+            |ChocoAdd? : ${chocolate.toOrder()}
             |Quantity : $quantity 
             |Total: $${(price)}
                 |Thank you!""".trimMargin()
@@ -64,38 +61,23 @@ class MainActivity : AppCompatActivity() {
             type = "text/plain"
         }
 
-        val order = Intent.createChooser(sendOrder, null)
-        startActivity(order)
+        startActivity(Intent.createChooser(sendOrder, null))
     }
 
-    private fun isCheckCream(): String {
-        val checkCream = findViewById<CheckBox>(R.id.whippingCreamChk)
-        return if (checkCream.isChecked) {
-            "YES"
+    private fun calcPrice(cream: Boolean, chocolate: Boolean): String {
+        val sum = if (cream) {
+            1
         } else {
-            "NO"
-        }
-    }
-
-    private fun isCheckChoco(): String {
-        val chocolate = findViewById<CheckBox>(R.id.chocolateChk)
-        return if (chocolate.isChecked) {
-            "YES"
+            0
+        } + if (chocolate) {
+            2
         } else {
-            "NO"
-        }
-    }
-
-    private fun calcPrice(cream: String, chocolate: String): String {
-        var sum = 0
-        if (cream == "YES") {
-            sum += 1
-        }
-        if (chocolate == "YES") {
-            sum += 2
+            0
         }
         return (sum + quantity * 10).toString()
     }
 
+
+    private fun Boolean.toOrder() = if (this) "YES" else "NO"
 
 }

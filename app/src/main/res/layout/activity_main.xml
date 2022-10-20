@@ -65,7 +65,6 @@
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:onClick="increment"
                 android:text="@string/plus"
                 tools:ignore="OnClick" />
 
@@ -83,7 +82,6 @@
                 android:id="@+id/minusButton"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:onClick="decrement"
                 android:text="@string/minusButton"
                 tools:ignore="OnClick" />
         </LinearLayout>
@@ -101,7 +99,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:onClick="submitOrder"
             android:text="@string/oreder"
             tools:ignore="OnClick" />
 
